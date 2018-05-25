@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="=utf-8">
+        <title>Planejamento</title>
+        <style>
+            table{
+                width: 200px; 
+                margin: 0 auto;
+                border: 1px solid black; 
+                border-collapse: collapse;
+                text-align: center;
+            }
+            th, td{
+                border: 1px solid black;
+                padding: 3px 10px;
+            }
+
+        </style>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+                function tornarTabelaEditavel(tabela){
+                         // Obtém todas as tds da tabela fornecida.
+                         var tdlist = tabela.getElementsByTagName("td");
+         
+                         for(var i = 0; tdlist[i]; i++) {
+                             // Adiciona o evento double click em cada td da tabela.
+                             tdlist[i].ondblclick = function() {
+                                 // Se for texto, muda para input.
+                                 if(this.firstChild.nodeType == 3) {
+                                     // Cria um campo de texto editável e insere o valor da td nesse campo.
+                                     var campo = document.createElement("input");
+                                     campo.setAttribute("size", "5");
+                                     campo.value = this.firstChild.nodeValue;
+         
+                                     // Substitui o texto da td pelo campo.
+                                     this.replaceChild(campo, this.firstChild);
+         
+                                     campo.select();
+         
+                                     // Faz o processo inverso ao perder o foco.
+                                     campo.onblur = function() {
+                                         this.parentNode.replaceChild(document.createTextNode(this.value), this);
+                                     }
+                                 }
+                             }
+                         }
+                     }
+         
+         
+                 var f = function(){
+                            if(document.getElementById("tabela")){
+                                var t = document.getElementById("tabela");
+                                t.parentNode.removeChild(t);
+                            }
+                             var letra = new Array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z") ;
+                             var tabela = document.createElement("TABLE");
+                             tabela.setAttribute("id", "tabela");
+                             var x = document.getElementById("texto1").value;
+                             var y = document.getElementById("texto2").value;
+                             document.getElementById("blocotb").appendChild(tabela);
+                             //alert(x + " " + y);
+                             x++;
+                             y++;
+                             for(var cont = 0; cont < x; cont++)
+                             {  //cria as linhas da tabela
+                                 var trx = document.createElement("TR");
+                                 tabela.appendChild(trx);
+                                 
+                                 for(var cont2 = 0; cont2 < y; cont2++){
+                                     if(cont==0){
+                                        if(cont2==0){
+                                        //cria as celulas com nomes das colunas campos
+                                        var tdy = document.createElement("TH");
+                                        var txt = document.createTextNode("site");
+                                        trx.appendChild(tdy);
+                                        tdy.appendChild(txt);
+                                        }
+                                        else{
+                                            //cria celulas com o numero do horizonte
+                                            var tdy = document.createElement("TH");
+                                            var txt = document.createTextNode(cont2);
+                                            trx.appendChild(tdy);
+                                            tdy.appendChild(txt);
+                                        }
+                                     }
+                                     
+                                     else{
+                                        if(cont2==0){
+                                            //cria celulas com o nome das linhas
+                                            var tdy = document.createElement("TH");
+                                            var txt = document.createTextNode(letra[cont-1]);
+                                            trx.appendChild(tdy);
+                                            tdy.appendChild(txt);
+                                        }
+                                        else{
+                                            //cria celulas para inserir dados
+                                            var tdy = document.createElement("TD");
+                                            var txt = document.createTextNode(0);
+                                            trx.appendChild(tdy);
+                                            tdy.appendChild(txt);
+                                        }
+                                     }
+                                 }
+         
+                             }
+         
+         
+                         }
+                         $(document).ready(function(){
+                             $("#btn").click(function(){
+                             f();
+                             tornarTabelaEditavel(document.getElementById("tabela"));
+                             });
+                         }); 
+                         
+                         function calcula(){
+                             if(!document.getElementById("tabela"))
+                                alert("Por favor crie uma tabela!");
+                             else{
+                                 var tb = document.getElementById("tabela");
+                                 var i, j, maior, menor, lucro=0;
+                                 var x = tb.rows.length;
+                                 var y = tb.rows[0].cells.length;
+                                
+                                 for(i=1;i<y;i++){//percorre as colunas da tabela
+                                    for(j=1;j<x;j++){//percorre as linhas da tabela
+                                        if(j==1){//pega um primeiro valor para menor e maior
+                                            maior = tb.rows[j].cells[i].firstChild.nodeValue;
+                                            menor = maior;
+                                        }
+                                        else{//seleciona o maior e o menor valor para cada coluna
+                                            if(tb.rows[j].cells[i].firstChild.nodeValue > maior)
+                                                maior = tb.rows[j].cells[i].firstChild.nodeValue;
+                                            if(tb.rows[j].cells[i].firstChild.nodeValue < menor)
+                                                menor = tb.rows[j].cells[i].firstChild.nodeValue;  
+                                        }
+                                    }
+                                    for(j=1;j<x;j++){//pinta as celulas escolhidas
+                                        if(tb.rows[j].cells[i].firstChild.nodeValue == maior && i!=1){
+                                            tb.rows[j].cells[i].style.backgroundColor = "red";
+                                            lucro = lucro + parseFloat(tb.rows[j].cells[i].firstChild.nodeValue);
+                                        }
+                                        if(tb.rows[j].cells[i].firstChild.nodeValue == menor && i!=y-1){
+                                            tb.rows[j].cells[i].style.backgroundColor = "blue";
+                                            lucro = lucro - parseFloat(tb.rows[j].cells[i].firstChild.nodeValue);
+                                        }
+                                    }
+                                 }
+                                alert("As células vermelhas indicam quando e onde vender, e as células azuis indicam quando e onde comprar.");
+                                alert("Seguindo a previsão você terá um lucro de: "+lucro);
+                             }   
+                         }
+                         
+         
+             </script>
+    </head>
+    <body>
+        <div>
+            <span>N° de sites:</span>
+            <input type="number" id="texto1" pattern="[0-9]" title="Numero natural entre 0 e 10" value="3" required>
+            <span>N° de horizontes:</span>
+            <input type="number" id="texto2" pattern="[0-9]" title="Numero natural entre 0 e 10" value="3" required>
+        </div>       
+        <input type="button" id="btn" value="Atualiza tabela">
+        <div id="blocotb"></div>
+        <div align="center">
+            <input type="button" id="calcula" value="CALCULAR" onclick="calcula()">
+        </div>
+    </body>
+    
+</html>

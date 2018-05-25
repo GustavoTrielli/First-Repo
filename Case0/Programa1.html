@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Marcador de Faltas</title>
+    </head>
+    <body align = "center">
+        <h1>Marcador de Faltas</h1>
+        <br/>
+        <label>N° de créditos</label>
+        <input id = "cred" name = "cred" type = "number" min = "0" value = "0">
+        <br/><br/>
+        <label>Horas faltadas</label>
+        <input id = "hf" name = "hf" type = "number" min = "0" value = "0">
+        <br/><br/>
+        <input id = "calcular" name = "calcular" type = "button" value = "CALCULAR" onclick="calcula()">
+    </body>
+    <script>
+            var cred, hf, ht, fp;
+
+            cred = document.getElementById("cred");
+            hf = document.getElementById("hf");
+
+            function calcula (){
+                ht = cred.value * 15;
+                fp = (ht * 0.3) - hf.value;
+                if(fp>0){
+                    alert("Você ainda pode faltar " + fp + " horas");
+                }
+                else if(fp<0)
+                    alert("Você foi reprovado por faltas");
+                else
+                    alert("Você não pode mais faltar");
+            }
+            
+
+    </script>
+</html>
